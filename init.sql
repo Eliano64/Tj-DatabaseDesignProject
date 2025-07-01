@@ -378,7 +378,7 @@ CREATE TABLE USER_MOVIE_RECS (
     user_id       NUMBER(20)  NOT NULL,
     movie_id      NUMBER(20)  NOT NULL,
     rec_type_id   NUMBER(2)   NOT NULL,     -- 外键到 REC_TYPES
-    score         NUMBER(5,3) DEFAULT 0     NOT NULL,   -- 排序分
+    score         NUMBER(5,3) DEFAULT 0     NOT NULL,   -- 排序分 
     generated_at  TIMESTAMP   DEFAULT SYSTIMESTAMP NOT NULL,
     CONSTRAINT pk_user_movie_rec
         PRIMARY KEY (user_id, movie_id, rec_type_id),
@@ -585,7 +585,7 @@ CREATE TABLE review_reports (
     CONSTRAINT review_reports_pk PRIMARY KEY (report_id),
     CONSTRAINT review_reports_review_fk FOREIGN KEY (review_id)   REFERENCES user_reviews(review_id)   ON DELETE CASCADE,
     CONSTRAINT review_reports_reporter_fk FOREIGN KEY (reporter_id) REFERENCES users(user_id)       ON DELETE CASCADE,
-    CONSTRAINT review_reports_handler_fk FOREIGN KEY (handler_id)  REFERENCES admins(user_id)       ON DELETE SET NULL
+    CONSTRAINT review_reports_handler_fk FOREIGN KEY (handler_id)  REFERENCES admins(admin_id)       ON DELETE SET NULL
 );
 CREATE INDEX idx_review_reports_review   ON review_reports (review_id);
 CREATE INDEX idx_review_reports_reporter ON review_reports (reporter_id);
@@ -613,7 +613,7 @@ CREATE TABLE post_reports (
     CONSTRAINT post_reports_pk PRIMARY KEY (report_id),
     CONSTRAINT post_reports_post_fk FOREIGN KEY (post_id)     REFERENCES group_posts(post_id) ON DELETE CASCADE,
     CONSTRAINT post_reports_reporter_fk FOREIGN KEY (reporter_id) REFERENCES users(user_id)     ON DELETE CASCADE,
-    CONSTRAINT post_reports_handler_fk FOREIGN KEY (handler_id)  REFERENCES admins(user_id)     ON DELETE SET NULL
+    CONSTRAINT post_reports_handler_fk FOREIGN KEY (handler_id)  REFERENCES admins(admin_id)     ON DELETE SET NULL
 );
 CREATE INDEX idx_post_reports_post     ON post_reports (post_id);
 CREATE INDEX idx_post_reports_reporter ON post_reports (reporter_id);
@@ -641,7 +641,7 @@ CREATE TABLE group_reports (
     CONSTRAINT group_reports_pk PRIMARY KEY (report_id),
     CONSTRAINT group_reports_group_fk FOREIGN KEY (group_id)    REFERENCES movie_groups(group_id) ON DELETE CASCADE,
     CONSTRAINT group_reports_reporter_fk FOREIGN KEY (reporter_id) REFERENCES users(user_id)       ON DELETE CASCADE,
-    CONSTRAINT group_reports_handler_fk FOREIGN KEY (handler_id)  REFERENCES admins(user_id)       ON DELETE SET NULL
+    CONSTRAINT group_reports_handler_fk FOREIGN KEY (handler_id)  REFERENCES admins(admin_id)       ON DELETE SET NULL
 );
 CREATE INDEX idx_group_reports_group    ON group_reports (group_id);
 CREATE INDEX idx_group_reports_reporter ON group_reports (reporter_id);
@@ -668,7 +668,7 @@ CREATE TABLE user_violations (
     create_time      TIMESTAMP DEFAULT SYSTIMESTAMP NOT NULL,
     CONSTRAINT user_violations_pk PRIMARY KEY (violation_id),
     CONSTRAINT user_violations_user_fk FOREIGN KEY (user_id)     REFERENCES users(user_id) ON DELETE CASCADE,
-    CONSTRAINT user_violations_operator_fk FOREIGN KEY (operator_id) REFERENCES admins(user_id) ON DELETE CASCADE
+    CONSTRAINT user_violations_operator_fk FOREIGN KEY (operator_id) REFERENCES admins(admin_id) ON DELETE CASCADE
 );
 CREATE INDEX idx_user_violations_user     ON user_violations (user_id);
 CREATE INDEX idx_user_violations_operator ON user_violations (operator_id);
@@ -691,7 +691,7 @@ CREATE TABLE admin_logs (
     ip             VARCHAR2(50 CHAR),
     create_time    TIMESTAMP DEFAULT SYSTIMESTAMP NOT NULL,
     CONSTRAINT admin_logs_pk PRIMARY KEY (log_id),
-    CONSTRAINT admin_logs_admin_fk FOREIGN KEY (admin_id) REFERENCES admins(user_id) ON DELETE CASCADE
+    CONSTRAINT admin_logs_admin_fk FOREIGN KEY (admin_id) REFERENCES admins(admin_id)  ON DELETE CASCADE
 );
 CREATE INDEX idx_admin_logs_admin  ON admin_logs (admin_id);
 CREATE INDEX idx_admin_logs_type   ON admin_logs (operation_type);
